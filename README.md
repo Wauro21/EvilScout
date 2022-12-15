@@ -12,7 +12,20 @@ The worked carried out on the context of the final project of the master's class
 
 ## Index
 
-1. Objective
+- [EvilScout](#evilscout)
+  - [Index](#index)
+  - [Objective](#objective)
+  - [Experimental Setup](#experimental-setup)
+    - [LAP-SDN: OpenWRT configuration](#lap-sdn-openwrt-configuration)
+      - [Boot device](#boot-device)
+      - [Configuring ethernet port IP address](#configuring-ethernet-port-ip-address)
+      - [Using the notebook integrated wireless card](#using-the-notebook-integrated-wireless-card)
+    - [Algorithm implementation:](#algorithm-implementation)
+    - [EvilTwin:](#eviltwin)
+      - [Burning Kali Linux to the SD:](#burning-kali-linux-to-the-sd)
+      - [Installing TP-Link AC600 Drivers](#installing-tp-link-ac600-drivers)
+      - [Software for passive EvilTwin:](#software-for-passive-eviltwin)
+      - [Software for active EvilTwin:](#software-for-active-eviltwin)
 
 ## Objective
 
@@ -126,6 +139,48 @@ In security configure to OpenNetwork:
 
 Save and apply the changes, after a few seconds the Network should be activated and accessible to clients. 
 
+### Algorithm implementation:
+
+Using the Scapy library the first condition (checking if the IP is contained in the prefix) is implemented on [`evilscout.py`](evilscout.py). To run this code in the AP install python and pip with the following commands:
+
+```
+opkg update
+opkg install python3
+opkg install python3-pip
+```
+Install the dependencies
+```
+pip3 install scapy
+```
 
 
+After this the code can be copy via ssh to the AP using scp. To run the code, use the following command:
+```
+python3 evilscout.py -i wlan0
+```
+
+In this case `wlan0` is the interface used in the AP. 
+
+### EvilTwin:
+
+![eviltwin](images/eviltwin.png)
+
+For the EvilTwin a Raspberry PI 2B was used along with two TP-Link AC600 Wireless NICs. 
+
+#### Burning Kali Linux to the SD:
+
+To burn the image onto the SD I recommend following the official documentation provided by Kali: [Kali on Raspberry Pi 2 - User Instructions](https://www.kali.org/docs/arm/raspberry-pi-2/)
+
+#### Installing TP-Link AC600 Drivers
+
+To use the Wireless nics the drivers are required. Drivers and installation instructions from this repository were followed: [TP-Link Archer T2U Plus a.k.a AC600 High-Gain](https://github.com/nlkguy/archer-t2u-plus-linux)
+
+#### Software for passive EvilTwin:
+
+To perform the passive attack, this implementation of [Linux Wifi Hotspot](https://github.com/lakinduakash/linux-wifi-hotspot) was used. The EvilTwin was configurated using the GUI provided. The SSID, BSSID and channel were manually set to match the ones deployed at the LAP. 
+
+
+#### Software for active EvilTwin: 
+
+To perform this attack [airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon) was used. The attack was configured to use `wlan1` for the attack and perform and EvilTwin attack in conjunction with a de-auth attack. Installation an instructions are provided inside the project's repository. 
 
